@@ -7,6 +7,7 @@ import productRoute from './routes/product.route.js';
 import cartRoute from './routes/cart.route.js';
 import couponRoute from './routes/coupon.route.js';
 import paymentRoute from './routes/payment.route.js';
+import analyticsRoute from './routes/analytics.route.js';
 
 
 import { connectDB } from './lib/db.js';
@@ -24,6 +25,7 @@ app.use('/api/products', productRoute);
 app.use('/api/cart', cartRoute);
 app.use('/api/coupons', couponRoute);
 app.use('/api/payments', paymentRoute);
+app.use('/api/analytics', analyticsRoute);
 
 
 app.get("/", (req, res) => {
