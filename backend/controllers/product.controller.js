@@ -1,8 +1,6 @@
 import { client } from '../lib/redis.js';
 import cloudinary from '../lib/cloudinary.js';
-import product from '../models/product.model.js';
 import Product from '../models/product.model.js';
-import e from 'express';
 
 
 export const getAllProducts = async (req, res) => {

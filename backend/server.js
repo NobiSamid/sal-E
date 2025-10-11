@@ -8,8 +8,6 @@ import cartRoute from './routes/cart.route.js';
 import couponRoute from './routes/coupon.route.js';
 import paymentRoute from './routes/payment.route.js';
 import analyticsRoute from './routes/analytics.route.js';
-
-
 import { connectDB } from './lib/db.js';
 
 dotenv.config();
