@@ -48,7 +48,7 @@ export const createProduct = async (req, res) => {
       cloudinaryResponse = await cloudinary.uploader.upload(image, {folder: 'products'})
     }
 
-    const product = await product.create({
+    const product = await Product.create({
       name,
       description,
       price,
@@ -58,8 +58,9 @@ export const createProduct = async (req, res) => {
     res.status(201).json({ message: 'Product created successfully', product });
   }catch (error) {
     console.log("Error in createProduct:", error.message);
-    res.status(500).json({ message: 'Server error hoise', error: error.message });
+    res.status(500).json({ message: 'Server error hoise product create korte giye', error: error.message });
   }
+  console.log("Incoming product data:", req.body);
 };
 
 export const deleteProduct = async (req, res) => {
