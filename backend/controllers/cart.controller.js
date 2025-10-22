@@ -5,7 +5,7 @@ export const getCartProducts = async (req, res) => {
     const products = await Product.find({_id: {$in: req.user.cartItems}});
 
     // add quantity for eacth product
-    const cartItems = products.map(product => {
+    const cartItems = products.map((product) => {
       const item = req.user.cartItems.find(cartItem => cartItem.id === product.id);
       return {...product.toJSON(), quantity: item.quantity};
     });
@@ -58,6 +58,7 @@ export const removeAllFromCart = async (req, res) => {
 export const updateQuantity = async (req, res) => {
   try{
     const {id:productId} = req.params;
+    const {quantity} = req.body;
     const user = req.user; // from protectRoute middleware
     const existingItem = user.cartItems.find(item => item.id === productId);
 
@@ -70,7 +71,7 @@ export const updateQuantity = async (req, res) => {
 
       existingItem.quantity = quantity;
       await user.save();
-      return res.json(user.cartItems);
+      res.json(user.cartItems);
     } else{
       return res.status(404).json({message: 'Product not found in cart'});
     }

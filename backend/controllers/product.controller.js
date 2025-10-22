@@ -5,8 +5,8 @@ import Product from '../models/product.model.js';
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await product.find();
-    res.status(200).json(products);
+    const products = await Product.find({}); //find all products
+    res.status(200).json({products});
   } catch (error) {
     console.log("Error in getAllProducts:", error);
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -23,7 +23,7 @@ export const getFeaturedProducts = async (req, res) => {
     // If not in cache, fetch from mongodb
     // .lean() is gonna return a plain javascript object instead of mongodb document
     // which is more lightweight and faster to work with
-    featuredProducts = await product.find({ isFeatured: true }).lean();
+    featuredProducts = await Product.find({ isFeatured: true }).lean();
 
     if(!featuredProducts){
       return res.status(404).json({ message: 'No featured products found' });
@@ -63,32 +63,60 @@ export const createProduct = async (req, res) => {
   console.log("Incoming product data:", req.body);
 };
 
-export const deleteProduct = async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
+// export const deleteProduct = async (req, res) => {
+//   try {
+//     const product = await Product.findById(req.params.id);
+//     if (!product) {
+//       return res.status(404).json({ message: 'Product delete korar jonno pai nai' });
+//     }
 
-    if (product.image) {
-      const publicId = product.image.split('/').pop().split('.')[0]; // Extract public ID from URL
-      try{
-        await cloudinary.uploader.destroy(`products/${publicId}`);
-        console.log("Image deleted from Cloudinary");
-      }catch(error){
-        console.log("Error deleting image from Cloudinary:", error.message);
-      }
-    }
+//     if (product.image) {
+//       const publicId = product.image.split('/').pop().split('.')[0]; // Extract public ID from URL
+//       try{
+//         await cloudinary.uploader.destroy(`products/${publicId}`);
+//         console.log("Image deleted from Cloudinary");
+//       }catch(error){
+//         console.log("Error deleting image from Cloudinary:", error.message);
+//       }
+//     }
 
-    await Product.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: 'Product deleted successfully'})
+//     await Product.findByIdAndDelete(req.params.id);
+//     res.status(200).json({ message: 'Product deleted successfully'})
     
-  } catch (error) {
-    console.log("Error in deleteProduct:", error.message);
-    res.status(500).json({ message: 'Server error hoise', error: error.message });
-  }  
+//   } catch (error) {
+//     console.log("Error in deleteProduct:", error.message);
+//     res.status(500).json({ message: 'Server error hoise', error: error.message });
+//   }  
 
-}
+// }
+
+export const deleteProduct = async (req, res) => {
+	try {
+		const product = await Product.findById(req.params.id);
+
+		if (!product) {
+			return res.status(404).json({ message: "Product not found" });
+		}
+
+		if (product.image) {
+			const publicId = product.image.split("/").pop().split(".")[0];
+			try {
+				await cloudinary.uploader.destroy(`products/${publicId}`);
+				console.log("deleted image from cloduinary");
+			} catch (error) {
+				console.log("error deleting image from cloduinary", error);
+			}
+		}
+
+		await Product.findByIdAndDelete(req.params.id);
+
+		res.json({ message: "Product deleted successfully" });
+	} catch (error) {
+		console.log("Error in deleteProduct controller", error.message);
+		res.status(500).json({ message: "Server error", error: error.message });
+	}
+};
+
 
 export const getRecommendedProducts = async (req, res) => {
   try {
@@ -117,7 +145,7 @@ export const getProductsBYCategory = async (req, res) => {
   const {category} = req.params;
   try {
     const products = await Product.find({category});
-    res.status(200).json(products);
+    res.status(200).json({products});
   } catch (error) {
     console.log("Error in getProductsBYCategory:", error.message);
     res.status(500).json({ message: 'Server error hoise', error: error.message });
