@@ -54,7 +54,7 @@ export const useProductStore = create((set) => ({
 			}));
 		} catch (error) {
 			set({ loading: false });
-			toast.error(error.response.data.error || "Failed to delete product from useproductstore");
+			toast.error(error.response.data.error || "Failed to delete product from useProductStore");
 		}
 	},
 	toggleFeaturedProduct: async (productId) => {
